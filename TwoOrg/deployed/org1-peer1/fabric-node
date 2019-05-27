@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Print the usage message
+function printHelp() {
+  echo "Usage: "
+  echo "  fabric-client <command>"
+  echo "    <command> - one of 'start', 'stop', 'restart' or 'clear'"
+  echo "      - 'start' - start the node with docker-compose up"
+  echo "      - 'stop' - stop the node with docker-compose down"
+  echo "      - 'restart' - restart the node"
+  echo "      - 'clear' - clear the node's resource"
+}
+
+#Start
+if [ "$1" == "start" ]; then
+  docker-compose -f docker-compose-peer1.yaml up -d
+elif [ "$1" == "stop" ]; then ## Stop 
+  docker-compose -f docker-compose-peer1.yaml down
+elif [ "$1" == "restart" ]; then ## Restart
+  docker-compose -f docker-compose-peer1.yaml down
+  docker-compose -f docker-compose-peer1.yaml up -d
+elif [ "$1" == "clear" ]; then ## Clear
+  docker rm $(docker ps -aq) -f
+  docker volume prune
+else
+  printHelp
+  exit 1
+fi
