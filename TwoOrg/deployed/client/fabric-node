@@ -1,5 +1,7 @@
 #!/bin/bash
 
+IMAGETAG="1.4.1"
+
 # Print the usage message
 function printHelp() {
   echo "Usage: "
