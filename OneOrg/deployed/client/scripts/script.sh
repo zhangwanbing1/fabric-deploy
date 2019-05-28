@@ -63,6 +63,7 @@ joinChannel () {
 	#for org in 1 2; do
 	org=1
 	    for peer in 1 2; do
+                echo "Join channel for peer${peer}.org${org}..."
 		joinChannelWithRetry $peer $org
 		echo "===================== peer${peer}.org${org} joined channel '$CHANNEL_NAME' ===================== "
 		sleep $DELAY
@@ -73,7 +74,7 @@ joinChannel () {
 
 ## Create channel
 echo "Creating channel..."
-#createChannel
+createChannel
 
 ## Join all the peers to the channel
 echo "Having all peers join the channel..."
@@ -81,7 +82,7 @@ joinChannel
 
 ## Set the anchor peers for each org in the channel
 echo "Updating anchor peers for org1..."
-#updateAnchorPeers 1 1
+updateAnchorPeers 1 1
 
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
@@ -89,11 +90,11 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
 	echo "Installing chaincode on peer1.org1..."
 	installChaincode 1 1
 	echo "Install chaincode on peer2.org1..."
-	#installChaincode 2 1
+	installChaincode 2 1
 
 	# Instantiate chaincode on peer2.org1
 	echo "Instantiating chaincode on peer2.org1..."
-	#instantiateChaincode 2 1
+	instantiateChaincode 2 1
 
 	# Query chaincode on peer0.org1
 	echo "Querying chaincode on peer2.org1..."
