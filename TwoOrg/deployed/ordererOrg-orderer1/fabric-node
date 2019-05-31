@@ -1,7 +1,5 @@
 #!/bin/bash
 
-IMAGETAG=1.4.1
-
 # Print the usage message
 function printHelp() {
   echo "Usage: "
@@ -15,15 +13,17 @@ function printHelp() {
 
 #Start
 if [ "$1" == "start" ]; then
-  IMAGE_TAG=$IMAGETAG docker-compose -f docker-compose-orderer1.yaml up -d
+  docker-compose -f docker-compose-orderer1.yaml up -d
 elif [ "$1" == "stop" ]; then ## Stop 
   docker-compose -f docker-compose-orderer1.yaml down
 elif [ "$1" == "restart" ]; then ## Restart
   docker-compose -f docker-compose-orderer1.yaml down
-  IMAGE_TAG=$IMAGETAG docker-compose -f docker-compose-orderer1.yaml up -d
+  docker-compose -f docker-compose-orderer1.yaml up -d
 elif [ "$1" == "clear" ]; then ## Clear
   docker rm $(docker ps -aq) -f
   docker volume prune
+elif [ "$1" == "logs" ]; then ## logs 
+  docker logs -f orderer1.example.com
 else
   printHelp
   exit 1

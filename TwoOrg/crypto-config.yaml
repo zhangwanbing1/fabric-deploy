@@ -65,7 +65,7 @@ PeerOrgs:
     # ---------------------------------------------------------------------------
     Template:
       Count: 2
-      Start: 1
+      # Start: 1
       # Hostname: {{.Prefix}}{{.Index}} # default
     # ---------------------------------------------------------------------------
     # "Users"
@@ -73,7 +73,7 @@ PeerOrgs:
     # Count: The number of user accounts _in addition_ to Admin
     # ---------------------------------------------------------------------------
     Users:
-      Count: 2
+      Count: 1
   # ---------------------------------------------------------------------------
   # Org2: See "Org1" for full specification
   # ---------------------------------------------------------------------------
@@ -82,6 +82,6 @@ PeerOrgs:
     EnableNodeOUs: true
     Template:
       Count: 2
-      Start: 1
+      # Start: 1
     Users:
-      Count: 2
+      Count: 1

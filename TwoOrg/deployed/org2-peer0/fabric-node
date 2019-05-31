@@ -24,6 +24,8 @@ elif [ "$1" == "restart" ]; then ## Restart
 elif [ "$1" == "clear" ]; then ## Clear
   docker rm $(docker ps -aq) -f
   docker volume prune
+elif [ "$1" == "logs" ]; then ## log
+  docker logs -f peer0.org2.example.com
 else
   printHelp
   exit 1
