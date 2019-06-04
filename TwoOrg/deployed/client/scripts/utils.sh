@@ -2,7 +2,7 @@
 # This is a collection of bash functions used by different scripts
 
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
-PEER0_xwb_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/xwb.csxoa.cn/peers/peer0.xwb.csxoa.cn/tls/ca.crt
+PEER0_XWB_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/xwb.csxoa.cn/peers/peer0.xwb.csxoa.cn/tls/ca.crt
 PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.csxoa.cn/peers/peer0.org2.csxoa.cn/tls/ca.crt
 PEER0_ORG3_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.csxoa.cn/peers/peer0.org3.csxoa.cn/tls/ca.crt
 
@@ -26,7 +26,7 @@ setOrdererGlobals() {
 setGlobals() {
   PEER=$1
   ORG=$2
-  if [ $ORG -eq 1 ]; then
+  if [ "$ORG" == "XWB" ]; then
     CORE_PEER_LOCALMSPID="XWBMSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_xwb_CA
     CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/xwb.csxoa.cn/users/Admin@xwb.csxoa.cn/msp
@@ -35,7 +35,7 @@ setGlobals() {
     else
       CORE_PEER_ADDRESS=peer1.xwb.csxoa.cn:7051
     fi
-  elif [ $ORG -eq 2 ]; then
+  elif [ "$ORG" == "ORG2" ]; then
     CORE_PEER_LOCALMSPID="Org2MSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
     CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.csxoa.cn/users/Admin@org2.csxoa.cn/msp
@@ -45,7 +45,7 @@ setGlobals() {
       CORE_PEER_ADDRESS=peer1.org2.csxoa.cn:7051
     fi
 
-  elif [ $ORG -eq 3 ]; then
+  elif [ "$ORG" == "ORG3" ]; then
     CORE_PEER_LOCALMSPID="Org3MSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
     CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.csxoa.cn/users/Admin@org3.csxoa.cn/msp
@@ -277,7 +277,7 @@ parsePeerConnectionParameters() {
     PEERS="$PEERS $PEER"
     PEER_CONN_PARMS="$PEER_CONN_PARMS --peerAddresses $CORE_PEER_ADDRESS"
     if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "true" ]; then
-      TLSINFO=$(eval echo "--tlsRootCertFiles \$PEER$1_ORG$2_CA")
+      TLSINFO=$(eval echo "--tlsRootCertFiles \$PEER$1_$2_CA")
       PEER_CONN_PARMS="$PEER_CONN_PARMS $TLSINFO"
     fi
     # shift by two to get the next pair of peer/org parameters
