@@ -25,7 +25,7 @@ Organizations:
         ID: OrdererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
-        MSPDir: crypto-config/ordererOrganizations/example.com/msp
+        MSPDir: crypto-config/ordererOrganizations/csxoa.cn/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -41,15 +41,15 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
 
-    - &Org1
+    - &XWB
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: Org1MSP
+        Name: XWBMSP
 
         # ID to load the MSP definition as
-        ID: Org1MSP
+        ID: XWBMSP
 
-        MSPDir: crypto-config/peerOrganizations/org1.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/xwb.csxoa.cn/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -57,20 +57,20 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+                Rule: "OR('XWBMSP.admin', 'XWBMSP.peer', 'XWBMSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+                Rule: "OR('XWBMSP.admin', 'XWBMSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('Org1MSP.admin')"
+                Rule: "OR('XWBMSP.admin')"
 
         # leave this flag set to true.
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.org1.example.com
+            - Host: peer0.xwb.csxoa.cn
               Port: 7051
 
     - &Org2
@@ -81,7 +81,7 @@ Organizations:
         # ID to load the MSP definition as
         ID: Org2MSP
 
-        MSPDir: crypto-config/peerOrganizations/org2.example.com/msp
+        MSPDir: crypto-config/peerOrganizations/org2.csxoa.cn/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -101,7 +101,7 @@ Organizations:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.org2.example.com
+            - Host: peer0.org2.csxoa.cn
               Port: 7051
 
 ################################################################################
@@ -172,7 +172,74 @@ Capabilities:
 #
 ################################################################################
 Application: &ApplicationDefaults
+    ACLs: &ACLsDefault
+        # This section provides defaults for policies for various resources
+        # in the system. These "resources" could be functions on system chaincodes
+        # (e.g., "GetBlockByNumber" on the "qscc" system chaincode) or other resources
+        # (e.g.,who can receive Block events). This section does NOT specify the resource's
+        # definition or API, but just the ACL policy for it.
+        #
+        # User's can override these defaults with their own policy mapping by defining the
+        # mapping under ACLs in their channel definition
 
+        #---Lifecycle System Chaincode (lscc) function to policy mapping for access control---#
+
+        # ACL policy for lscc's "getid" function
+        lscc/ChaincodeExists: /Channel/Application/Readers
+
+        # ACL policy for lscc's "getdepspec" function
+        lscc/GetDeploymentSpec: /Channel/Application/Readers
+
+        # ACL policy for lscc's "getccdata" function
+        lscc/GetChaincodeData: /Channel/Application/Readers
+
+        # ACL Policy for lscc's "getchaincodes" function
+        lscc/GetInstantiatedChaincodes: /Channel/Application/Readers
+
+        #---Query System Chaincode (qscc) function to policy mapping for access control---#
+
+        # ACL policy for qscc's "GetChainInfo" function
+        qscc/GetChainInfo: /Channel/Application/Readers
+
+        # ACL policy for qscc's "GetBlockByNumber" function
+        qscc/GetBlockByNumber: /Channel/Application/Readers
+
+        # ACL policy for qscc's  "GetBlockByHash" function
+        qscc/GetBlockByHash: /Channel/Application/Readers
+
+        # ACL policy for qscc's "GetTransactionByID" function
+        qscc/GetTransactionByID: /Channel/Application/Readers
+
+        # ACL policy for qscc's "GetBlockByTxID" function
+        qscc/GetBlockByTxID: /Channel/Application/Readers
+
+        #---Configuration System Chaincode (cscc) function to policy mapping for access control---#
+
+        # ACL policy for cscc's "GetConfigBlock" function
+        cscc/GetConfigBlock: /Channel/Application/Readers
+
+        # ACL policy for cscc's "GetConfigTree" function
+        cscc/GetConfigTree: /Channel/Application/Readers
+
+        # ACL policy for cscc's "SimulateConfigTreeUpdate" function
+        cscc/SimulateConfigTreeUpdate: /Channel/Application/Readers
+
+        #---Miscellanesous peer function to policy mapping for access control---#
+
+        # ACL policy for invoking chaincodes on peer
+        peer/Propose: /Channel/Application/Writers
+
+        # ACL policy for chaincode to chaincode invocation
+        peer/ChaincodeToChaincode: /Channel/Application/Readers
+
+        #---Events resource to policy mapping for access control###---#
+
+        # ACL policy for sending block events
+        event/Block: /Channel/Application/Readers
+
+        # ACL policy for sending filtered block events
+        event/FilteredBlock: /Channel/Application/Readers
+        
     # Organizations is the list of orgs which are defined as participants on
     # the application side of the network
     Organizations:
@@ -208,25 +275,48 @@ Orderer: &OrdererDefaults
     OrdererType: solo
 
     Addresses:
-        - orderer1.example.com:7050
+        - orderer1.csxoa.cn:7050
 
-    # Batch Timeout: The amount of time to wait before creating a batch
+    # Batch Timeout: The amount of time to wait before creating a batch.
     BatchTimeout: 2s
 
-    # Batch Size: Controls the number of messages batched into a block
+    # Batch Size: Controls the number of messages batched into a block.
+    # The orderer views messages opaquely, but typically, messages may
+    # be considered to be Fabric transactions.  The 'batch' is the group
+    # of messages in the 'data' field of the block.  Blocks will be a few kb
+    # larger than the batch size, when signatures, hashes, and other metadata
+    # is applied.
     BatchSize:
 
-        # Max Message Count: The maximum number of messages to permit in a batch
-        MaxMessageCount: 10
+        # Max Message Count: The maximum number of messages to permit in a
+        # batch.  No block will contain more than this number of messages.
+        MaxMessageCount: 500
 
         # Absolute Max Bytes: The absolute maximum number of bytes allowed for
-        # the serialized messages in a batch.
-        AbsoluteMaxBytes: 99 MB
+        # the serialized messages in a batch. The maximum block size is this value
+        # plus the size of the associated metadata (usually a few KB depending
+        # upon the size of the signing identities). Any transaction larger than
+        # this value will be rejected by ordering. If the "kafka" OrdererType is
+        # selected, set 'message.max.bytes' and 'replica.fetch.max.bytes' on
+        # the Kafka brokers to a value that is larger than this one.
+        AbsoluteMaxBytes: 10 MB
 
-        # Preferred Max Bytes: The preferred maximum number of bytes allowed for
-        # the serialized messages in a batch. A message larger than the preferred
-        # max bytes will result in a batch larger than preferred max bytes.
-        PreferredMaxBytes: 512 KB
+        # Preferred Max Bytes: The preferred maximum number of bytes allowed
+        # for the serialized messages in a batch. Roughly, this field may be considered
+        # the best effort maximum size of a batch. A batch will fill with messages
+        # until this size is reached (or the max message count, or batch timeout is
+        # exceeded).  If adding a new message to the batch would cause the batch to
+        # exceed the preferred max bytes, then the current batch is closed and written
+        # to a block, and a new batch containing the new message is created.  If a
+        # message larger than the preferred max bytes is received, then its batch
+        # will contain only that message.  Because messages may be larger than
+        # preferred max bytes (up to AbsoluteMaxBytes), some batches may exceed
+        # the preferred max bytes, but will always contain exactly one transaction.
+        PreferredMaxBytes: 2 MB
+
+    # Max Channels is the maximum number of channels to allow on the ordering
+    # network. When set to 0, this implies no maximum number of channels.
+    MaxChannels: 0
 
     Kafka:
         # Brokers: A list of Kafka brokers to which the orderer connects
@@ -310,7 +400,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                    - *Org1
+                    - *XWB
                     - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
@@ -318,7 +408,7 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *Org1
+                - *XWB
                 - *Org2
             Capabilities:
                 <<: *ApplicationCapabilities
@@ -332,7 +422,7 @@ Profiles:
             OrdererType: kafka
             Kafka:
                 Brokers:
-                - kafka.example.com:9092
+                - kafka.csxoa.cn:9092
 
             Organizations:
             - *OrdererOrg
@@ -345,7 +435,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *Org1
+                - *XWB
                 - *Org2
 
     SampleMultiNodeEtcdRaft:
@@ -357,23 +447,23 @@ Profiles:
             OrdererType: etcdraft
             EtcdRaft:
                 Consenters:
-                - Host: orderer1.example.com
+                - Host: orderer1.csxoa.cn
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer1.example.com/tls/server.crt
-                - Host: orderer2.example.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/tls/server.crt
+                - Host: orderer2.csxoa.cn
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-                - Host: orderer3.example.com
+                  ClientTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer2.csxoa.cn/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer2.csxoa.cn/tls/server.crt
+                - Host: orderer3.csxoa.cn
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                  ClientTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer3.csxoa.cn/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer3.csxoa.cn/tls/server.crt
 
             Addresses:
-                - orderer1.example.com:7050
-                - orderer2.example.com:7050
-                - orderer3.example.com:7050
+                - orderer1.csxoa.cn:7050
+                - orderer2.csxoa.cn:7050
+                - orderer3.csxoa.cn:7050
 
             Organizations:
             - *OrdererOrg
@@ -386,5 +476,5 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *Org1
+                - *XWB
                 - *Org2

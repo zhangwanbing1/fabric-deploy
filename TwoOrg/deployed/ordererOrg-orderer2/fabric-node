@@ -23,7 +23,11 @@ elif [ "$1" == "clear" ]; then ## Clear
   docker rm $(docker ps -aq) -f
   docker volume prune
 elif [ "$1" == "logs" ]; then ## logs 
+<<<<<<< HEAD
+  docker logs -f orderer2.csxoa.cn
+=======
   docker logs -f orderer2.example.com
+>>>>>>> b74dd5c699f1a6f2f415b48ce558bbb0e14d3150
 else
   printHelp
   exit 1

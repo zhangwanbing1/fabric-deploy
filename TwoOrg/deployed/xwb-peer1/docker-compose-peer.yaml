@@ -6,9 +6,8 @@
 version: '2'
 
 volumes:
-  peer0.org1.example.com:
+  peer1.xwb.csxoa.cn:
 
-  
 services:
   couchdb:
     container_name: couchdb
@@ -24,20 +23,20 @@ services:
     ports:
       - "5984:5984"
       
-  peer0.org1.example.com:
-    container_name: peer0.org1.example.com
+  peer1.xwb.csxoa.cn:
+    container_name: peer1.xwb.csxoa.cn
     extends:
       file: base/peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+      - CORE_PEER_ID=peer1.xwb.csxoa.cn
+      - CORE_PEER_ADDRESS=peer1.xwb.csxoa.cn:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:7052
+      - CORE_PEER_CHAINCODEADDRESS=peer1.xwb.csxoa.cn:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.example.com:7051
-      - CORE_PEER_LOCALMSPID=Org1MSP
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.xwb.csxoa.cn:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.xwb.csxoa.cn:7051
+      - CORE_PEER_LOCALMSPID=XWBMSP
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=localhost:5984
@@ -49,9 +48,9 @@ services:
       
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
-        - ./crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls:/etc/hyperledger/fabric/tls
-        - peer0.org1.example.com:/var/hyperledger/production
+        - ./crypto-config/peerOrganizations/xwb.csxoa.cn/peers/peer1.xwb.csxoa.cn/msp:/etc/hyperledger/fabric/msp
+        - ./crypto-config/peerOrganizations/xwb.csxoa.cn/peers/peer1.xwb.csxoa.cn/tls:/etc/hyperledger/fabric/tls
+        - peer1.xwb.csxoa.cn:/var/hyperledger/production
 
     ports:
       - 7051:7051

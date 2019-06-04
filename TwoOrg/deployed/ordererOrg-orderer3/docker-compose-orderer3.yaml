@@ -6,20 +6,20 @@
 version: '2'
 
 volumes:
-  orderer3.example.com:
+  orderer3.csxoa.cn:
 
 
 services:
-  orderer3.example.com:
+  orderer3.csxoa.cn:
     extends:
       file: base/peer-base.yaml
       service: orderer-base
-    container_name: orderer3.example.com
+    container_name: orderer3.csxoa.cn
     volumes:
         - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-        - ./crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/var/hyperledger/orderer/msp
-        - ./crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/:/var/hyperledger/orderer/tls
-        - orderer3.example.com:/var/hyperledger/production/orderer
+        - ./crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer3.csxoa.cn/msp:/var/hyperledger/orderer/msp
+        - ./crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer3.csxoa.cn/tls/:/var/hyperledger/orderer/tls
+        - orderer3.csxoa.cn:/var/hyperledger/production/orderer
     ports:
     - 7050:7050
 
