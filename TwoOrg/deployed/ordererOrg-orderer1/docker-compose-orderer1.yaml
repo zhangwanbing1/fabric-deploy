@@ -18,8 +18,8 @@ services:
     container_name: orderer1.csxoa.cn
     volumes:
         - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-        - ./crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/msp:/var/hyperledger/orderer/msp
-        - ./crypto-config/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/tls/:/var/hyperledger/orderer/tls
+        - ./mymsp/localmsp/msp:/var/hyperledger/orderer/msp
+        - ./mymsp/localmsp/tls/:/var/hyperledger/orderer/tls
         - orderer1.csxoa.cn:/var/hyperledger/production/orderer
     ports:
     - 7050:7050

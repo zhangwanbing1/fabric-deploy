@@ -1,10 +1,10 @@
 
 # This is a collection of bash functions used by different scripts
 
-ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
-PEER0_XWB_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/xwb.csxoa.cn/peers/peer0.xwb.csxoa.cn/tls/ca.crt
-PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.csxoa.cn/peers/peer0.org2.csxoa.cn/tls/ca.crt
-PEER0_ORG3_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.csxoa.cn/peers/peer0.org3.csxoa.cn/tls/ca.crt
+ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/orgmsp/ordererOrganizations/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
+PEER0_XWB_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@xwb.csxoa.cn/tls/ca.crt
+PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org2.csxoa.cn/tls/ca.crt
+PEER0_ORG3_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org3.csxoa.cn/tls/ca.crt
 
 # verify the result of the end-to-end test
 verifyResult() {
@@ -19,8 +19,8 @@ verifyResult() {
 # Set OrdererOrg.Admin globals
 setOrdererGlobals() {
   CORE_PEER_LOCALMSPID="OrdererMSP"
-  CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/csxoa.cn/orderers/orderer1.csxoa.cn/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
-  CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/csxoa.cn/users/Admin@csxoa.cn/msp
+  CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/orgmsp/ordererOrganizations/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
+  CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto//localmsp/Admin@csxoa.cn/msp
 }
 
 setGlobals() {
@@ -28,8 +28,8 @@ setGlobals() {
   ORG=$2
   if [ "$ORG" == "XWB" ]; then
     CORE_PEER_LOCALMSPID="XWBMSP"
-    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_xwb_CA
-    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/xwb.csxoa.cn/users/Admin@xwb.csxoa.cn/msp
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XWB_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@xwb.csxoa.cn/msp
     if [ $PEER -eq 0 ]; then
       CORE_PEER_ADDRESS=peer0.xwb.csxoa.cn:7051
     else
@@ -38,7 +38,7 @@ setGlobals() {
   elif [ "$ORG" == "ORG2" ]; then
     CORE_PEER_LOCALMSPID="Org2MSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
-    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.csxoa.cn/users/Admin@org2.csxoa.cn/msp
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org2.csxoa.cn/msp
     if [ $PEER -eq 0 ]; then
       CORE_PEER_ADDRESS=peer0.org2.csxoa.cn:7051
     else
@@ -48,7 +48,7 @@ setGlobals() {
   elif [ "$ORG" == "ORG3" ]; then
     CORE_PEER_LOCALMSPID="Org3MSP"
     CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
-    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.csxoa.cn/users/Admin@org3.csxoa.cn/msp
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org3.csxoa.cn/msp
     if [ $PEER -eq 0 ]; then
       CORE_PEER_ADDRESS=peer0.org3.csxoa.cn:7051
     else
@@ -105,7 +105,7 @@ joinChannelWithRetry() {
   else
     COUNTER=1
   fi
-  verifyResult $res "After $MAX_RETRY attempts, peer${PEER}.org${ORG} has failed to join channel '$CHANNEL_NAME' "
+  verifyResult $res "After $MAX_RETRY attempts, peer${PEER}.org ${ORG} has failed to join channel '$CHANNEL_NAME' "
 }
 
 installChaincode() {
@@ -119,7 +119,7 @@ installChaincode() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode installation on peer${PEER}.org${ORG} has failed"
-  echo "===================== Chaincode is installed on peer${PEER}.org${ORG} ===================== "
+  echo "===================== Chaincode is installed on peer${PEER}.org ${ORG} ===================== "
   echo
 }
 
@@ -145,7 +145,7 @@ instantiateChaincode() {
   fi
   cat log.txt
   verifyResult $res "Chaincode instantiation on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' failed"
-  echo "===================== Chaincode is instantiated on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' ===================== "
+  echo "===================== Chaincode is instantiated on peer${PEER}.org ${ORG} on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -160,7 +160,7 @@ upgradeChaincode() {
   set +x
   cat log.txt
   verifyResult $res "Chaincode upgrade on peer${PEER}.org${ORG} has failed"
-  echo "===================== Chaincode is upgraded on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' ===================== "
+  echo "===================== Chaincode is upgraded on peer${PEER}.org ${ORG} on channel '$CHANNEL_NAME' ===================== "
   echo
 }
 
@@ -169,7 +169,7 @@ chaincodeQuery() {
   ORG=$2
   setGlobals $PEER $ORG
   EXPECTED_RESULT=$3
-  echo "===================== Querying on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME'... ===================== "
+  echo "===================== Querying on peer${PEER}.org ${ORG} on channel '$CHANNEL_NAME'... ===================== "
   local rc=1
   local starttime=$(date +%s)
 
@@ -179,7 +179,7 @@ chaincodeQuery() {
     test "$(($(date +%s) - starttime))" -lt "$TIMEOUT" -a $rc -ne 0
   do
     sleep $DELAY
-    echo "Attempting to Query peer${PEER}.org${ORG} ...$(($(date +%s) - starttime)) secs"
+    echo "Attempting to Query peer${PEER}.org ${ORG} ...$(($(date +%s) - starttime)) secs"
     set -x
     peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}' >&log.txt
     res=$?
@@ -195,7 +195,7 @@ chaincodeQuery() {
   echo
   cat log.txt
   if test $rc -eq 0; then
-    echo "===================== Query successful on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' ===================== "
+    echo "===================== Query successful on peer${PEER}.org ${ORG} on channel '$CHANNEL_NAME' ===================== "
   else
     echo "!!!!!!!!!!!!!!! Query result on peer${PEER}.org${ORG} is INVALID !!!!!!!!!!!!!!!!"
     echo "================== ERROR !!! FAILED to execute End-2-End Scenario =================="

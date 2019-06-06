@@ -38,7 +38,7 @@ echo "Channel name : "$CHANNEL_NAME
 . scripts/utils.sh
 
 createChannel() {
-	setGlobals 0 "xwb"
+	setGlobals 0 "XWB"
 
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
                 set -x
@@ -58,10 +58,10 @@ createChannel() {
 }
 
 joinChannel () {
-	for org in "xwb" "org2"; do
+	for org in "XWB" "ORG2"; do
 	    for peer in 0 1; do
 		joinChannelWithRetry $peer $org
-		echo "===================== peer${peer}.org${org} joined channel '$CHANNEL_NAME' ===================== "
+		echo "===================== peer${peer}.org ${org} joined channel '$CHANNEL_NAME' ===================== "
 		sleep $DELAY
 		echo
 	    done

@@ -48,8 +48,8 @@ services:
       
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/xwb.csxoa.cn/peers/peer1.xwb.csxoa.cn/msp:/etc/hyperledger/fabric/msp
-        - ./crypto-config/peerOrganizations/xwb.csxoa.cn/peers/peer1.xwb.csxoa.cn/tls:/etc/hyperledger/fabric/tls
+        - ./mymsp/localmsp/msp:/etc/hyperledger/fabric/msp
+        - ./mymsp/localmsp/tls:/etc/hyperledger/fabric/tls
         - peer1.xwb.csxoa.cn:/var/hyperledger/production
 
     ports:
