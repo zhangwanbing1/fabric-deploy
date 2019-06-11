@@ -38,7 +38,7 @@ echo "Channel name : "$CHANNEL_NAME
 . scripts/utils.sh
 
 createChannel() {
-	setGlobals 0 "XWB"
+	setGlobals 0 "ORG1"
 
 	if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
                 set -x
@@ -58,7 +58,7 @@ createChannel() {
 }
 
 joinChannel () {
-	for org in "XWB" "ORG2"; do
+	for org in "ORG1" "ORG2"; do
 	    for peer in 0 1; do
 		joinChannelWithRetry $peer $org
 		echo "===================== peer${peer}.org ${org} joined channel '$CHANNEL_NAME' ===================== "
@@ -77,14 +77,14 @@ echo "Having all peers join the channel..."
 joinChannel
 
 ## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for xwb..."
-updateAnchorPeers 0 "XWB"
+echo "Updating anchor peers for org1..."
+updateAnchorPeers 0 "ORG1"
 echo "Updating anchor peers for org2..."
 updateAnchorPeers 0 "ORG2"
 
-## Install chaincode on peer0.xwb and peer0.org2
-echo "Installing chaincode on peer0.xwb..."
-installChaincode 0 "XWB"
+## Install chaincode on peer0.org1 and peer0.org2
+echo "Installing chaincode on peer0.org1..."
+installChaincode 0 "ORG1"
 echo "Install chaincode on peer0.org2..."
 installChaincode 0 "ORG2"
 
@@ -92,13 +92,13 @@ installChaincode 0 "ORG2"
 echo "Instantiating chaincode on peer0.org2..."
 instantiateChaincode 0 "ORG2"
 
-# Query chaincode on peer0.xwb
-echo "Querying chaincode on peer0.xwb..."
-chaincodeQuery 0 "XWB" 100
+# Query chaincode on peer0.org1
+echo "Querying chaincode on peer0.org1..."
+chaincodeQuery 0 "ORG1" 100
 
-# Invoke chaincode on peer0.xwb and peer0.org2
-echo "Sending invoke transaction on peer0.xwb peer0.org2..."
-chaincodeInvoke 0 "XWB" 0 "ORG2"
+# Invoke chaincode on peer0.org1 and peer0.org2
+echo "Sending invoke transaction on peer0.org1 peer0.org2..."
+chaincodeInvoke 0 "ORG1" 0 "ORG2"
 
 ## Install chaincode on peer1.org2
 echo "Installing chaincode on peer1.org2..."

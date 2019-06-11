@@ -2,7 +2,7 @@
 # This is a collection of bash functions used by different scripts
 
 ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/orgmsp/ordererOrganizations/msp/tlscacerts/tlsca.csxoa.cn-cert.pem
-PEER0_XWB_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@xwb.csxoa.cn/tls/ca.crt
+PEER0_ORG1_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org1.csxoa.cn/tls/ca.crt
 PEER0_ORG2_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org2.csxoa.cn/tls/ca.crt
 PEER0_ORG3_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org3.csxoa.cn/tls/ca.crt
 
@@ -26,14 +26,14 @@ setOrdererGlobals() {
 setGlobals() {
   PEER=$1
   ORG=$2
-  if [ "$ORG" == "XWB" ]; then
-    CORE_PEER_LOCALMSPID="XWBMSP"
-    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_XWB_CA
-    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@xwb.csxoa.cn/msp
+  if [ "$ORG" == "ORG1" ]; then
+    CORE_PEER_LOCALMSPID="Org1MSP"
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/localmsp/Admin@org1.csxoa.cn/msp
     if [ $PEER -eq 0 ]; then
-      CORE_PEER_ADDRESS=peer0.xwb.csxoa.cn:7051
+      CORE_PEER_ADDRESS=peer0.org1.csxoa.cn:7051
     else
-      CORE_PEER_ADDRESS=peer1.xwb.csxoa.cn:7051
+      CORE_PEER_ADDRESS=peer1.org1.csxoa.cn:7051
     fi
   elif [ "$ORG" == "ORG2" ]; then
     CORE_PEER_LOCALMSPID="Org2MSP"
@@ -134,12 +134,12 @@ instantiateChaincode() {
   # the "-o" option
   if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "false" ]; then
     set -x
-    peer chaincode instantiate -o orderer1.csxoa.cn:7050 -C $CHANNEL_NAME -n mycc -l ${LANGUAGE} -v ${VERSION} -c '{"Args":["init","a","100","b","200"]}' -P "AND ('XWBMSP.peer','Org2MSP.peer')" >&log.txt
+    peer chaincode instantiate -o orderer1.csxoa.cn:7050 -C $CHANNEL_NAME -n mycc -l ${LANGUAGE} -v ${VERSION} -c '{"Args":["init","a","100","b","200"]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')" >&log.txt
     res=$?
     set +x
   else
     set -x
-    peer chaincode instantiate -o orderer1.csxoa.cn:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -l ${LANGUAGE} -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "AND ('XWBMSP.peer','Org2MSP.peer')" >&log.txt
+    peer chaincode instantiate -o orderer1.csxoa.cn:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -l ${LANGUAGE} -v 1.0 -c '{"Args":["init","a","100","b","200"]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')" >&log.txt
     res=$?
     set +x
   fi
@@ -155,7 +155,7 @@ upgradeChaincode() {
   setGlobals $PEER $ORG
 
   set -x
-  peer chaincode upgrade -o orderer1.csxoa.cn:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 2.0 -c '{"Args":["init","a","90","b","210"]}' -P "AND ('XWBMSP.peer','Org2MSP.peer','Org3MSP.peer')"
+  peer chaincode upgrade -o orderer1.csxoa.cn:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 2.0 -c '{"Args":["init","a","90","b","210"]}' -P "AND ('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
   res=$?
   set +x
   cat log.txt

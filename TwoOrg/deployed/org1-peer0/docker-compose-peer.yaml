@@ -6,7 +6,7 @@
 version: '2'
 
 volumes:
-  peer0.xwb.csxoa.cn:
+  peer0.org1.csxoa.cn:
 
   
 services:
@@ -24,20 +24,20 @@ services:
     ports:
       - "5984:5984"
       
-  peer0.xwb.csxoa.cn:
-    container_name: peer0.xwb.csxoa.cn
+  peer0.org1.csxoa.cn:
+    container_name: peer0.org1.csxoa.cn
     extends:
       file: base/peer-base.yaml
       service: peer-base
     environment:
-      - CORE_PEER_ID=peer0.xwb.csxoa.cn
-      - CORE_PEER_ADDRESS=peer0.xwb.csxoa.cn:7051
+      - CORE_PEER_ID=peer0.org1.csxoa.cn
+      - CORE_PEER_ADDRESS=peer0.org1.csxoa.cn:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.xwb.csxoa.cn:7052
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.csxoa.cn:7052
       - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.xwb.csxoa.cn:7051
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.xwb.csxoa.cn:7051
-      - CORE_PEER_LOCALMSPID=XWBMSP
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.csxoa.cn:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.csxoa.cn:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=localhost:5984
@@ -51,7 +51,7 @@ services:
         - /var/run/:/host/var/run/
         - ./mymsp/localmsp/msp:/etc/hyperledger/fabric/msp
         - ./mymsp/localmsp/tls:/etc/hyperledger/fabric/tls
-        - peer0.xwb.csxoa.cn:/var/hyperledger/production
+        - peer0.org1.csxoa.cn:/var/hyperledger/production
 
     ports:
       - 7051:7051

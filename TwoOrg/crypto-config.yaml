@@ -25,10 +25,10 @@ OrdererOrgs:
 # ---------------------------------------------------------------------------
 PeerOrgs:
   # ---------------------------------------------------------------------------
-  # XWB
+  # Org1
   # ---------------------------------------------------------------------------
-  - Name: XWB
-    Domain: xwb.csxoa.cn
+  - Name: Org1
+    Domain: org1.csxoa.cn
     EnableNodeOUs: true
     # ---------------------------------------------------------------------------
     # "Specs"
@@ -47,7 +47,7 @@ PeerOrgs:
     #                 Org.Domain, respectively.
     # ---------------------------------------------------------------------------
     # Specs:
-    #   - Hostname: foo # implicitly "foo.xwb.csxoa.cn"
+    #   - Hostname: foo # implicitly "foo.org1.csxoa.cn"
     #     CommonName: foo27.org5.csxoa.cn # overrides Hostname-based FQDN set above
     #   - Hostname: bar
     #   - Hostname: baz
@@ -73,9 +73,9 @@ PeerOrgs:
     # Count: The number of user accounts _in addition_ to Admin
     # ---------------------------------------------------------------------------
     Users:
-      Count: 2
+      Count: 5
   # ---------------------------------------------------------------------------
-  # Org2: See "XWB" for full specification
+  # Org2: See "Org1" for full specification
   # ---------------------------------------------------------------------------
   - Name: Org2
     Domain: org2.csxoa.cn
@@ -84,4 +84,4 @@ PeerOrgs:
       Count: 2
       # Start: 1
     Users:
-      Count: 2
+      Count: 5

@@ -41,15 +41,15 @@ Organizations:
                 Type: Signature
                 Rule: "OR('OrdererMSP.admin')"
 
-    - &XWB
+    - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: XWBMSP
+        Name: Org1MSP
 
         # ID to load the MSP definition as
-        ID: XWBMSP
+        ID: Org1MSP
 
-        MSPDir: crypto-config/peerOrganizations/xwb.csxoa.cn/msp
+        MSPDir: crypto-config/peerOrganizations/org1.csxoa.cn/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -57,20 +57,20 @@ Organizations:
         Policies:
             Readers:
                 Type: Signature
-                Rule: "OR('XWBMSP.admin', 'XWBMSP.peer', 'XWBMSP.client')"
+                Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('XWBMSP.admin', 'XWBMSP.client')"
+                Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('XWBMSP.admin')"
+                Rule: "OR('Org1MSP.admin')"
 
         # leave this flag set to true.
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.xwb.csxoa.cn
+            - Host: peer0.org1.csxoa.cn
               Port: 7051
 
     - &Org2
@@ -400,7 +400,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                    - *XWB
+                    - *Org1
                     - *Org2
     TwoOrgsChannel:
         Consortium: SampleConsortium
@@ -408,7 +408,7 @@ Profiles:
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *XWB
+                - *Org1
                 - *Org2
             Capabilities:
                 <<: *ApplicationCapabilities
@@ -435,7 +435,7 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *XWB
+                - *Org1
                 - *Org2
 
     SampleMultiNodeEtcdRaft:
@@ -476,5 +476,5 @@ Profiles:
         Consortiums:
             SampleConsortium:
                 Organizations:
-                - *XWB
+                - *Org1
                 - *Org2
