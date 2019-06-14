@@ -1,0 +1,27 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+volumes:
+  orderer2.csxoa.cn:
+
+
+services:
+
+  orderer2.csxoa.cn:
+    extends:
+      file: base/peer-base.yaml
+      service: orderer-base
+    container_name: orderer2.csxoa.cn
+    volumes:
+        - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+        - ./mymsp/localmsp/msp:/var/hyperledger/orderer/msp
+        - ./mymsp/localmsp/tls/:/var/hyperledger/orderer/tls
+        - orderer2.csxoa.cn:/var/hyperledger/production/orderer
+    ports:
+    - 7050:7050
+    restart: always
+
