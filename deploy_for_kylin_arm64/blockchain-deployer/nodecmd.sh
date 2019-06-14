@@ -29,7 +29,7 @@ elif [ "$1" == "clear" ]; then ## Clear
   docker stop $(docker ps -aq)
   docker rm $(docker ps -aq) -f
   docker volume prune
-elif [ "$1" == "clear" ]; then ## logs
+elif [ "$1" == "logs" ]; then ## logs
   docker-compose -f docker-compose.yaml logs -f
 else
   printHelp

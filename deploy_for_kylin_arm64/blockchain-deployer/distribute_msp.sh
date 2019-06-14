@@ -64,6 +64,7 @@ rm nodes/client/mymsp/localmsp/* nodes/client/mymsp/orgmsp/* -rf
 cp channel-artifacts/* nodes/client/channel-artifacts/ -r
 cp crypto-config/peerOrganizations/org1.csxoa.cn/users/Admin@org1.csxoa.cn nodes/client/mymsp/localmsp/ -r
 cp crypto-config/peerOrganizations/org2.csxoa.cn/users/Admin@org2.csxoa.cn nodes/client/mymsp/localmsp/ -r
+cp crypto-config/ordererOrganizations/csxoa.cn/users/Admin@csxoa.cn nodes/client/mymsp/localmsp/ -r
 mkdir -p nodes/client/mymsp/orgmsp/ordererOrganizations
 cp crypto-config/ordererOrganizations/csxoa.cn/msp nodes/client/mymsp/orgmsp/ordererOrganizations/ -r
 mkdir -p nodes/client/mymsp/orgmsp/org1.csxoa.cn
